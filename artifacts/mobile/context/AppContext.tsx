@@ -14,8 +14,8 @@ const firebaseConfig = {
 };
 
 const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
-export const auth = getAuth(app);
-export const db = getFirestore(app);
+export const auth    = getAuth(app);
+export const db      = getFirestore(app);
 export const storage = getStorage(app);
 
 interface AppContextType {
@@ -30,16 +30,16 @@ const AppContext = createContext<AppContextType>({
 });
 
 export function AppProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [user,     setUser]     = useState<User | null>(null);
+  const [loading,  setLoading]  = useState(true);
   const [userData, setUserData] = useState<any>(null);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+    const unsub = onAuthStateChanged(auth, firebaseUser => {
       setUser(firebaseUser);
       setLoading(false);
     });
-    return () => unsubscribe();
+    return () => unsub();
   }, []);
 
   return (
@@ -51,3 +51,4 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
 export const useApp = () => useContext(AppContext);
 export default AppContext;
+    
